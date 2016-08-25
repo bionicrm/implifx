@@ -16,4 +16,4 @@ Implifx simply defines methods for marshalling and unmarshalling binary into and
 Just run `go get -u gopkg.in/golifx/implifx.v1` to get the latest version.
 
 ## Getting Started
-TODO
+If you prefer a fully functioning implementation, [click here](https://github.com/golifx/emulifx/blob/master/server/server.go) to see how Emulifx uses this API for emulating LIFX bulbs. Emulifx acts as if it were an actual LIFX light bulb, which is what you're presumably trying to do if you use this API.
