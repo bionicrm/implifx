@@ -1,0 +1,2 @@
+# Implifx
+Go API for LIFX devices' LAN protocol on the server side. This can be used to create a LIFX protocol compatible device on the network that responds to normal requests similar to that of the official bulbs. This is also used for [Emulifx](https://github.com/bionicrm/emulifx) in order to emulate LIFX bulbs on your local machine for testing purposes. It also extends [Controlifx](https://github.com/bionicrm/controlifx), which is the client side API for controlling LIFX bulbs over the LAN.
