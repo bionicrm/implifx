@@ -4,7 +4,6 @@ import (
 	"github.com/bionicrm/controlifx"
 	"fmt"
 	"encoding/binary"
-	"bytes"
 	"math"
 	"encoding"
 )
@@ -104,13 +103,13 @@ func getReceivablePayloadOfType(t uint16) (encoding.BinaryUnmarshaler, error) {
 }
 
 func (o *SetPowerLanMessage) UnmarshalBinary(data []byte) error {
-	o.Level = controlifx.PowerLevel(binary.LittleEndian.Uint16(data[:2]))
+	o.Level = binary.LittleEndian.Uint16(data[:2])
 
 	return nil
 }
 
 func (o *SetLabelLanMessage) UnmarshalBinary(data []byte) error {
-	o.Label = controlifx.Label(bytes.TrimRight(data[:32], "\x00"))
+	o.Label = controlifx.BToStr(data[:32])
 
 	return nil
 }
@@ -132,7 +131,7 @@ func (o *LightSetColorLanMessage) UnmarshalBinary(data []byte) error {
 }
 
 func (o *LightSetPowerLanMessage) UnmarshalBinary(data []byte) error {
-	o.Level = controlifx.PowerLevel(binary.LittleEndian.Uint16(data[:2]))
+	o.Level = binary.LittleEndian.Uint16(data[:2])
 	o.Duration = binary.LittleEndian.Uint32(data[2:6])
 
 	return nil
@@ -204,12 +203,22 @@ func (o StateWifiFirmwareLanMessage) MarshalBinary() (data []byte, _ error) {
 	return
 }
 
-func (o StatePowerLanMessage) MarshalBinary() ([]byte, error) {
-	return o.Level.MarshalBinary()
+func (o StatePowerLanMessage) MarshalBinary() (data []byte, _ error) {
+	data = make([]byte, 2)
+
+	// Level.
+	binary.LittleEndian.PutUint16(data, o.Level)
+
+	return
 }
 
-func (o StateLabelLanMessage) MarshalBinary() ([]byte, error) {
-	return o.Label.MarshalBinary()
+func (o StateLabelLanMessage) MarshalBinary() (data []byte, _ error) {
+	data = make([]byte, 32)
+
+	// Label.
+	copy(data, o.Label)
+
+	return
 }
 
 func (o StateVersionLanMessage) MarshalBinary() (data []byte, _ error) {
@@ -242,25 +251,17 @@ func (o StateInfoLanMessage) MarshalBinary() (data []byte, _ error) {
 	return
 }
 
-func (o StateLocationLanMessage) MarshalBinary() (data []byte, err error) {
+func (o StateLocationLanMessage) MarshalBinary() (data []byte, _ error) {
 	data = make([]byte, 56)
 
 	// Location.
 	copy(data[:16], o.Location[:])
 
 	// Label.
-	b, err := o.Label.MarshalBinary()
-	if err != nil {
-		return
-	}
-	copy(data[16:48], b)
+	copy(data[16:48], o.Label)
 
 	// Updated at.
-	b, err = o.UpdatedAt.MarshalBinary()
-	if err != nil {
-		return
-	}
-	copy(data[48:], b)
+	binary.LittleEndian.PutUint64(data[48:], o.UpdatedAt)
 
 	return
 }
@@ -272,18 +273,10 @@ func (o StateGroupLanMessage) MarshalBinary() (data []byte, err error) {
 	copy(data[:16], o.Group[:])
 
 	// Label.
-	b, err := o.Label.MarshalBinary()
-	if err != nil {
-		return
-	}
-	copy(data[16:48], b)
+	copy(data[16:48], o.Label)
 
 	// Updated at.
-	b, err = o.UpdatedAt.MarshalBinary()
-	if err != nil {
-		return
-	}
-	copy(data[48:], b)
+	binary.LittleEndian.PutUint64(data[48:], o.UpdatedAt)
 
 	return
 }
@@ -291,6 +284,7 @@ func (o StateGroupLanMessage) MarshalBinary() (data []byte, err error) {
 func (o EchoResponseLanMessage) MarshalBinary() (data []byte, _ error) {
 	data = make([]byte, 64)
 
+	// Payload.
 	copy(data, o.Payload[:])
 
 	return
@@ -307,22 +301,19 @@ func (o LightStateLanMessage) MarshalBinary() (data []byte, err error) {
 	copy(data[:8], b)
 
 	// Power.
-	b, err = o.Power.MarshalBinary()
-	if err != nil {
-		return
-	}
-	copy(data[10:12], b)
+	binary.LittleEndian.PutUint16(data[10:12], o.Power)
 
 	// Label.
-	b, err = o.Label.MarshalBinary()
-	if err != nil {
-		return
-	}
-	copy(data[12:], b)
+	copy(data[12:], o.Label)
 
 	return
 }
 
-func (o LightStatePowerLanMessage) MarshalBinary() ([]byte, error) {
-	return o.Level.MarshalBinary()
+func (o LightStatePowerLanMessage) MarshalBinary() (data []byte, _ error) {
+	data = make([]byte, 2)
+
+	// Level.
+	binary.LittleEndian.PutUint16(data, o.Level)
+
+	return
 }
