@@ -12,6 +12,7 @@ Implifx simply defines methods for marshalling and unmarshalling binary into and
 - [Installation](#installation)
 - [Getting Started](#getting-started)
 - [Testing](#testing)
+- [Additional Help](#additional-help)
 
 ## Installation
 Just run `go get -u gopkg.in/golifx/implifx.v1` to get the latest version.
@@ -134,3 +135,6 @@ $ clifx --broadcast-addr 127.0.0.1:59311 -a info
 ```
 2016/08/25 21:43:38 Received message of type 34 from 127.0.0.1:56700
 ```
+
+## Additional Help
+Visit [#golifx](http://webchat.freenode.net?randomnick=1&channels=%23golifx&prompt=1) on chat.freenode.net to get help, ask questions, or discuss ideas.
