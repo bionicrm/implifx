@@ -3,7 +3,7 @@ package implifx
 import (
 	"net"
 	"strconv"
-	"github.com/bionicrm/controlifx"
+	"gopkg.in/golifx/controlifx.v1"
 	"encoding"
 )
 

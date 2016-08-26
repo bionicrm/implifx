@@ -1,7 +1,7 @@
 package implifx
 
 import (
-	"github.com/bionicrm/controlifx"
+	"gopkg.in/golifx/controlifx.v1"
 	"fmt"
 	"encoding/binary"
 	"math"
