@@ -1,11 +1,11 @@
 package implifx
 
 import (
-	"gopkg.in/golifx/controlifx.v1"
-	"fmt"
-	"encoding/binary"
-	"math"
 	"encoding"
+	"encoding/binary"
+	"fmt"
+	"gopkg.in/golifx/controlifx.v1"
+	"math"
 )
 
 type (

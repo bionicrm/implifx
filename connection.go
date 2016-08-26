@@ -1,10 +1,10 @@
 package implifx
 
 import (
+	"encoding"
+	"gopkg.in/golifx/controlifx.v1"
 	"net"
 	"strconv"
-	"gopkg.in/golifx/controlifx.v1"
-	"encoding"
 )
 
 type Connection struct {
@@ -75,14 +75,14 @@ func (o Connection) Close() error {
 
 func (o Connection) Respond(always bool, triggeringAddr *net.UDPAddr, triggeringMsg ReceivableLanMessage, t uint16, payload encoding.BinaryMarshaler) (tx int, _ error) {
 	msg := controlifx.SendableLanMessage{
-		Header:controlifx.LanHeader{
-			Frame:controlifx.LanHeaderFrame{
-				Size:controlifx.LanHeaderSize,
-				Source:triggeringMsg.Header.Frame.Source,
+		Header: controlifx.LanHeader{
+			Frame: controlifx.LanHeaderFrame{
+				Size:   controlifx.LanHeaderSize,
+				Source: triggeringMsg.Header.Frame.Source,
 			},
-			FrameAddress:controlifx.LanHeaderFrameAddress{
-				Target:o.Mac,
-				Sequence:triggeringMsg.Header.FrameAddress.Sequence,
+			FrameAddress: controlifx.LanHeaderFrameAddress{
+				Target:   o.Mac,
+				Sequence: triggeringMsg.Header.FrameAddress.Sequence,
 			},
 		},
 	}
