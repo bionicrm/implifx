@@ -60,6 +60,7 @@ At this point, you'll want to process the received message. Handling messages an
 However, sending responses is handled by the API. How and when responses are sent is dependant upon the protocol, not really the implementation, since certain messages constitute a response or acknowledgement regardless of how the server processes them. The following code sample will show you how to do that.
 
 The example is largely incomplete, but does work properly for messages with `AckRequired` set to `true` and `ResRequired` set to `false`. Here's the method broken down in the order of parameters:
+
 1. This `bool` value describes whether or not a response should be sent even if it was not explicitly required in the `ResRequired` header field. For example, when a device sends a `GetLabel` request, this should be `true` since it wouldn't make sense for the server to simply not respond to a `GetLabel` request. However, for a `SetPower` request, this should be `false` since a `StatePower` response should only be sent if it was explicitly required.
 2. The remote address of the sender of the message you're responding to. This is technically just the address the response will be sent to.
 3. The received message that you're responding to. This is necessary in order to properly set the `Source` and `Sequence` header fields.
