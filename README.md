@@ -79,8 +79,8 @@ if _, err := conn.Respond(false, raddr, recMsg,
 package main
 
 import (
-	"github.com/bionicrm/controlifx"
-	"github.com/bionicrm/implifx"
+	"gopkg.in/golifx/controlifx.v1"
+	"gopkg.in/golifx/implifx.v1"
 	"log"
 	"net"
 )
