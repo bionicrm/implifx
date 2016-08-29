@@ -4,7 +4,7 @@ import (
 	"encoding"
 	"encoding/binary"
 	"fmt"
-	"gopkg.in/golifx/controlifx.v1"
+	"github.com/bionicrm/controlifx"
 	"math"
 )
 
@@ -14,6 +14,7 @@ type (
 
 	SetPowerLanMessage      controlifx.SetPowerLanMessage
 	SetLabelLanMessage      controlifx.SetLabelLanMessage
+	SetOwnerLanMessage      controlifx.SetOwnerLanMessage
 	EchoRequestLanMessage   controlifx.EchoRequestLanMessage
 	LightSetColorLanMessage controlifx.LightSetColorLanMessage
 	LightSetPowerLanMessage controlifx.LightSetPowerLanMessage
@@ -29,6 +30,7 @@ type (
 	StateInfoLanMessage         controlifx.StateInfoLanMessage
 	StateLocationLanMessage     controlifx.StateLocationLanMessage
 	StateGroupLanMessage        controlifx.StateGroupLanMessage
+	StateOwnerLanMessage        controlifx.StateOwnerLanMessage
 	EchoResponseLanMessage      controlifx.EchoResponseLanMessage
 	LightStateLanMessage        controlifx.LightStateLanMessage
 	LightStatePowerLanMessage   controlifx.LightStatePowerLanMessage
@@ -63,6 +65,8 @@ func getReceivablePayloadOfType(t uint16) (encoding.BinaryUnmarshaler, error) {
 		payload = &SetPowerLanMessage{}
 	case controlifx.SetLabelType:
 		payload = &SetLabelLanMessage{}
+	case controlifx.SetOwnerType:
+		payload = &SetOwnerLanMessage{}
 	case controlifx.EchoRequestType:
 		payload = &EchoRequestLanMessage{}
 	case controlifx.LightSetColorType:
@@ -91,6 +95,8 @@ func getReceivablePayloadOfType(t uint16) (encoding.BinaryUnmarshaler, error) {
 		fallthrough
 	case controlifx.GetGroupType:
 		fallthrough
+	case controlifx.GetOwnerType:
+		fallthrough
 	case controlifx.LightGetType:
 		fallthrough
 	case controlifx.LightGetPowerType:
@@ -103,13 +109,28 @@ func getReceivablePayloadOfType(t uint16) (encoding.BinaryUnmarshaler, error) {
 }
 
 func (o *SetPowerLanMessage) UnmarshalBinary(data []byte) error {
+	// Level.
 	o.Level = binary.LittleEndian.Uint16(data[:2])
 
 	return nil
 }
 
 func (o *SetLabelLanMessage) UnmarshalBinary(data []byte) error {
+	// Label.
 	o.Label = controlifx.BToStr(data[:32])
+
+	return nil
+}
+
+func (o *SetOwnerLanMessage) UnmarshalBinary(data []byte) error {
+	// Owner.
+	copy(o.Owner[:], data[:16])
+
+	// Label.
+	o.Label = controlifx.BToStr(data[16:48])
+
+	// Updated at.
+	o.UpdatedAt = binary.LittleEndian.Uint64(data[48:])
 
 	return nil
 }
@@ -266,11 +287,26 @@ func (o StateLocationLanMessage) MarshalBinary() (data []byte, _ error) {
 	return
 }
 
-func (o StateGroupLanMessage) MarshalBinary() (data []byte, err error) {
+func (o StateGroupLanMessage) MarshalBinary() (data []byte, _ error) {
 	data = make([]byte, 56)
 
 	// Location.
 	copy(data[:16], o.Group[:])
+
+	// Label.
+	copy(data[16:48], o.Label)
+
+	// Updated at.
+	binary.LittleEndian.PutUint64(data[48:], o.UpdatedAt)
+
+	return
+}
+
+func (o StateOwnerLanMessage) MarshalBinary() (data []byte, _ error) {
+	data = make([]byte, 56)
+
+	// Owner.
+	copy(data[:16], o.Owner[:])
 
 	// Label.
 	copy(data[16:48], o.Label)

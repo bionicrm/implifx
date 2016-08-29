@@ -2,13 +2,16 @@ package implifx
 
 import (
 	"encoding"
+	"encoding/json"
+	"fmt"
 	"gopkg.in/golifx/controlifx.v1"
 	"net"
 	"strconv"
 )
 
 type Connection struct {
-	Mac uint64
+	Mac   uint64
+	Debug bool
 
 	conn *net.UDPConn
 }
@@ -58,7 +61,15 @@ func (o Connection) Receive() (n int, raddr *net.UDPAddr, msg ReceivableLanMessa
 
 		msg = ReceivableLanMessage{}
 		if err = msg.UnmarshalBinary(b); err == nil {
+			if o.Debug {
+				out, _ := json.MarshalIndent(msg, "", "  ")
+
+				fmt.Println(">>>", string(out))
+			}
+
 			break
+		} else if o.Debug {
+			fmt.Printf(">>> (%s) %#v", err, b)
 		}
 	}
 
@@ -91,6 +102,12 @@ func (o Connection) Respond(always bool, triggeringAddr *net.UDPAddr, triggering
 		b, err := msg.MarshalBinary()
 		if err != nil {
 			return 0, err
+		}
+
+		if o.Debug {
+			out, _ := json.MarshalIndent(msg, "", "  ")
+
+			fmt.Println("<<<", string(out))
 		}
 
 		return len(b), o.Send(triggeringAddr, b)
