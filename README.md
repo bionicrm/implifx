@@ -1,12 +1,12 @@
 # Implifx
 Server side API for LIFX device implementations.
 
-This API extends [Controlifx](https://github.com/golifx/controlifx), the client side API for LIFX device control. Controlifx is responsible for sending requests to LIFX devices (or machines capable of understanding the LAN protocol) and receiving responses. Implementations of Implifx are responsible for receiving requests, updating a virtual light bulb or some other hardware, and sending back responses.
+This API extends [Controlifx](https://github.com/lifx-tools/controlifx), the client side API for LIFX device control. Controlifx is responsible for sending requests to LIFX devices (or machines capable of understanding the LAN protocol) and receiving responses. Implementations of Implifx are responsible for receiving requests, updating a virtual light bulb or some other hardware, and sending back responses.
 
 Implifx simply defines methods for marshalling and unmarshalling binary into and from responses and requests, all respectively. This means that handling each message and sending back appropriate responses is up to the implementation.
 
 **Built with Implifx:**
-- [Emulifx](https://github.com/golifx/emulifx) &ndash; LIFX device emulator
+- [Emulifx](https://github.com/lifx-tools/emulifx) &ndash; LIFX device emulator
 
 **Contents:**
 - [Installation](#installation)
@@ -15,14 +15,14 @@ Implifx simply defines methods for marshalling and unmarshalling binary into and
 - [Additional Help](#additional-help)
 
 ## Installation
-Just run `go get -u gopkg.in/golifx/implifx.v1` to get the latest version.
+Just run `go get -u gopkg.in/lifx-tools/implifx.v1` to get the latest version.
 
 ## Getting Started
-If you prefer a fully functioning implementation, [click here](https://github.com/golifx/emulifx/blob/master/server/server.go) to see how Emulifx uses this API for emulating LIFX bulbs. Emulifx acts as if it were an actual LIFX light bulb, which is what you're presumably trying to do if you use this API.
+If you prefer a fully functioning implementation, [click here](https://github.com/lifx-tools/emulifx/blob/master/server/server.go) to see how Emulifx uses this API for emulating LIFX bulbs. Emulifx acts as if it were an actual LIFX light bulb, which is what you're presumably trying to do if you use this API.
 
 If you had a look at Emulifx or would like to get straight to making your own implementation, here's some instructions and code to go along with it... first, just like Controlifx, you'll need to open a UDP socket for sending and receiving messages.
 
-Note that in this case, we use `ListenOnOtherPort(...)` instead of `Listen(...)`, which uses port 56700, because we'll eventually want to test the server on our local machine. When we use [Clifx](https://github.com/golifx/clifx) later on, it will bind to 0.0.0.0:56700, and so we don't want to bind to that same address here or else we'll get an error:
+Note that in this case, we use `ListenOnOtherPort(...)` instead of `Listen(...)`, which uses port 56700, because we'll eventually want to test the server on our local machine. When we use [Clifx](https://github.com/lifx-tools/clifx) later on, it will bind to 0.0.0.0:56700, and so we don't want to bind to that same address here or else we'll get an error:
 
 ```go
 conn, err := implifx.ListenOnOtherPort("127.0.0.1", "0")
@@ -80,8 +80,8 @@ if _, err := conn.Respond(false, raddr, recMsg,
 package main
 
 import (
-	"gopkg.in/golifx/controlifx.v1"
-	"gopkg.in/golifx/implifx.v1"
+	"gopkg.in/lifx-tools/controlifx.v1"
+	"gopkg.in/lifx-tools/implifx.v1"
 	"log"
 	"net"
 )
@@ -118,7 +118,7 @@ func main() {
 ```
 
 ## Testing
-To test your implementation, use [Clifx](https://github.com/golifx/clifx) on the same machine that you're developing on. The CLI will, by default, emit and receive messages on the LAN. However, you want to send and receive messages on your local machine instead.
+To test your implementation, use [Clifx](https://github.com/lifx-tools/clifx) on the same machine that you're developing on. The CLI will, by default, emit and receive messages on the LAN. However, you want to send and receive messages on your local machine instead.
 
 In the following command, replace `59311` with the port that your server is listening on. If you have the same code as the completed example from [Getting Started](#getting-started), this can be found when it prints out `2016/08/25 21:38:09 Listening @ 127.0.0.1:59311` or similar. The other parts of the command can be explained by checking out the Clifx read-me.
 
@@ -137,4 +137,4 @@ $ clifx --broadcast-addr 127.0.0.1:59311 -a info
 ```
 
 ## Additional Help
-Visit [#golifx](http://webchat.freenode.net?randomnick=1&channels=%23golifx&prompt=1) on chat.freenode.net to get help, ask questions, or discuss ideas.
+Visit [#lifx-tools](http://webchat.freenode.net?randomnick=1&channels=%23lifx-tools&prompt=1) on chat.freenode.net to get help, ask questions, or discuss ideas.
