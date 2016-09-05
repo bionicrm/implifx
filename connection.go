@@ -4,7 +4,7 @@ import (
 	"encoding"
 	"encoding/json"
 	"fmt"
-	"gopkg.in/golifx/controlifx.v1"
+	"gopkg.in/lifx-tools/controlifx.v1"
 	"net"
 	"strconv"
 )
