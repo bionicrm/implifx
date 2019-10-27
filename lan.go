@@ -4,7 +4,7 @@ import (
 	"encoding"
 	"encoding/binary"
 	"fmt"
-	"gopkg.in/lifx-tools/controlifx.v1"
+	"github.com/yath/controlifx"
 	"math"
 )
 
