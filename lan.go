@@ -4,7 +4,7 @@ import (
 	"encoding"
 	"encoding/binary"
 	"fmt"
-	"gopkg.in/lifx-tools/controlifx.v1"
+	"github.com/yath/controlifx"
 	"math"
 )
 
@@ -327,7 +327,7 @@ func (o EchoResponseLanMessage) MarshalBinary() (data []byte, _ error) {
 }
 
 func (o LightStateLanMessage) MarshalBinary() (data []byte, err error) {
-	data = make([]byte, 44)
+	data = make([]byte, 52)
 
 	// Color.
 	b, err := o.Color.MarshalBinary()
@@ -340,7 +340,7 @@ func (o LightStateLanMessage) MarshalBinary() (data []byte, err error) {
 	binary.LittleEndian.PutUint16(data[10:12], o.Power)
 
 	// Label.
-	copy(data[12:], o.Label)
+	copy(data[12:44], o.Label)
 
 	return
 }
